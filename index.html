@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استوديو دمج وطباعة الصور A4 / A5 / A6 - PhotoPrint Studio</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="assets/app_icon.png">
+    <!-- Google Fonts for Cairo & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ==========================================
+         TOP APPLICATION HEADER
+         ========================================== -->
+    <header class="app-header">
+        <div class="brand-section">
+            <div class="brand-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                    <path d="M3 9h18"/>
+                    <path d="M9 21V9"/>
+                </svg>
+            </div>
+            <div>
+                <h1 class="brand-title">
+                    استوديو دمج وطباعة الصور
+                    <span class="brand-badge">A4 / A5 / A6 Pro</span>
+                </h1>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <!-- Clear all button -->
+            <button id="btnClearAll" class="btn btn-danger" title="حذف جميع الصور والبدء من جديد">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"/>
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                    <line x1="10" x2="10" y1="11" y2="17"/>
+                    <line x1="14" x2="14" y1="11" y2="17"/>
+                </svg>
+                <span>بدء من جديد</span>
+            </button>
+
+            <!-- Load Project -->
+            <button id="btnLoadProject" class="btn btn-secondary" title="فتح مشروع محفوظ سابقاً">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
+                    <path d="m12 10 4 4m0 0-4 4m4-4H8"/>
+                </svg>
+                <span>فتح مشروع</span>
+            </button>
+
+            <!-- Save Project -->
+            <button id="btnSaveProject" class="btn btn-secondary" title="حفظ هذا التوزيع والصور في ملف للمتابعة لاحقاً">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                    <polyline points="17 21 17 13 7 13 7 21"/>
+                    <polyline points="7 3 7 8 15 8"/>
+                </svg>
+                <span>حفظ المشروع (.photoprint)</span>
+            </button>
+
+            <!-- Direct Print -->
+            <button id="btnPrintDirect" class="btn btn-outline" title="طباعة مباشرة بجودة الطابعة">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 6 2 18 2 18 9"/>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                    <rect width="12" height="8" x="6" y="14"/>
+                </svg>
+                <span>طباعة</span>
+            </button>
+
+            <!-- Export High-Res Image -->
+            <button id="btnExportModal" class="btn btn-primary" title="تصدير وحفظ الصورة بجودة طباعة 300 DPI">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" x2="12" y1="15" y2="3"/>
+                </svg>
+                <span>حفظ وتصدير الصورة</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ==========================================
+         MAIN LAYOUT: WORKSPACE + SIDEBAR
+         ========================================== -->
+    <main class="app-container">
+        
+        <!-- Canvas / Paper Workspace -->
+        <section class="app-workspace">
+            <!-- Secondary Workspace Toolbar -->
+            <div class="workspace-toolbar">
+                <div class="toolbar-info">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" x2="12" y1="16" y2="12"/>
+                        <line x1="12" x2="12.01" y1="8" y2="8"/>
+                    </svg>
+                    <span id="paperDimensionsLabel">ورقة A4 (210 × 297 مم) - الهوامش القياسية 3 مم</span>
+                </div>
+
+                <div class="toolbar-actions">
+                    <span style="font-size: 0.78rem; color: var(--text-muted); margin-left: 6px;">حجم العرض:</span>
+                    <button class="btn btn-outline btn-sm btn-preview-zoom active" data-zoom="fit">ملاءمة الشاشة</button>
+                    <button class="btn btn-outline btn-sm btn-preview-zoom" data-zoom="0.5">50%</button>
+                    <button class="btn btn-outline btn-sm btn-preview-zoom" data-zoom="0.75">75%</button>
+                    <button class="btn btn-outline btn-sm btn-preview-zoom" data-zoom="1.0">100%</button>
+                </div>
+            </div>
+
+            <!-- Scrollable Canvas Area -->
+            <div class="sheet-scroll-container" id="sheetWrapper">
+                <!-- Physical A4 Representation -->
+                <div class="sheet-paper" id="sheetPaper" data-orientation="portrait">
+                    <!-- Dynamic Slots Container -->
+                    <div class="slots-container" id="slotsContainer"></div>
+                </div>
+            </div>
+
+            <!-- Quick Instructions Toast -->
+            <div class="floating-actions-bar">
+                <div class="floating-action-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                    <span>اسحب الصور وأفلتها مباشرة في التقسيم</span>
+                </div>
+                <div class="floating-action-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m21 21-6-6m6 6v-4.8m0 4.8h-4.8"/>
+                    </svg>
+                    <span>عجلة الماوس: تكبير/تصغير داخل التقسيم</span>
+                </div>
+                <div class="floating-action-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3"/>
+                    </svg>
+                    <span>سحب الماوس: تحريك ومحاذاة الصورة</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Tool & Settings Sidebar -->
+        <aside class="app-sidebar">
+            <div class="sidebar-header">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="4" x2="20" y1="21" y2="21"/>
+                    <line x1="4" x2="20" y1="14" y2="14"/>
+                    <line x1="4" x2="20" y1="7" y2="7"/>
+                </svg>
+                <span>لوحة التحكم والتخصيص</span>
+            </div>
+
+            <div class="sidebar-content">
+
+                <!-- PANEL 1: Paper Orientation -->
+                <div class="panel-card">
+                    <div class="panel-title">
+                        <span>اتجاه الورقة (A4)</span>
+                        <span class="panel-title-badge">الورقة الأساسية</span>
+                    </div>
+
+                    <div class="segmented-control">
+                        <button id="btnOrientPortrait" class="segmented-btn active" type="button">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect width="14" height="18" x="5" y="3" rx="2"/>
+                            </svg>
+                            <span>عمودية (Portrait)</span>
+                        </button>
+
+                        <button id="btnOrientLandscape" class="segmented-btn" type="button">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect width="18" height="14" x="3" y="5" rx="2"/>
+                            </svg>
+                            <span>أفقية (Landscape)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PANEL 2: Layout Subdivision & Photo Count -->
+                <div class="panel-card">
+                    <div class="panel-title">
+                        <span>عدد الصور وتقسيم الورقة</span>
+                        <span class="panel-title-badge">تقسيم ذكي</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="layoutSelect">اختر توزيع الصور داخل الورقة:</label>
+                        <select id="layoutSelect" class="form-select"></select>
+                    </div>
+
+                    <!-- Custom Grid Option (Hidden by default) -->
+                    <div id="customGridControls" class="form-group hidden" style="margin-top: 10px;">
+                        <label class="form-label">تخصيص شبكة التقسيم:</label>
+                        <div class="grid-2col">
+                            <div>
+                                <span style="font-size: 0.75rem; color: var(--text-secondary);">عدد الصفوف:</span>
+                                <input type="number" id="customRows" class="form-input" min="1" max="8" value="2">
+                            </div>
+                            <div>
+                                <span style="font-size: 0.75rem; color: var(--text-secondary);">عدد الأعمدة:</span>
+                                <input type="number" id="customCols" class="form-input" min="1" max="8" value="2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL 3: Margins & Spacing (المارجن من كل الجهات والمسافات) -->
+                <div class="panel-card">
+                    <div class="panel-title">
+                        <span>الهوامش والمسافات (المارجن)</span>
+                        <button id="marginLinkBtn" class="btn-icon active" title="ربط كافة الهوامش بنفس القيمة أو فك الربط">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Linked Margin -->
+                    <div id="marginLinkedGroup" class="form-group">
+                        <div class="form-label">
+                            <span>هامش الورقة الموحد (القياسي 3 مم):</span>
+                            <span style="color: var(--accent-blue); font-weight: 700;">3 مم</span>
+                        </div>
+                        <div class="input-with-unit">
+                            <input type="number" id="marginAll" class="form-input" min="0" max="40" step="0.5" value="3">
+                            <span class="input-unit">مم</span>
+                        </div>
+                    </div>
+
+                    <!-- Individual Margins (Unlinked) -->
+                    <div id="marginsIndividualGroup" class="form-group hidden">
+                        <label class="form-label">هوامش حرة من كل جهة:</label>
+                        <div class="grid-4col">
+                            <div>
+                                <span style="font-size: 0.72rem; color: var(--text-muted);">أعلى</span>
+                                <input type="number" id="marginTop" class="form-input" min="0" max="40" step="0.5" value="3">
+                            </div>
+                            <div>
+                                <span style="font-size: 0.72rem; color: var(--text-muted);">يمين</span>
+                                <input type="number" id="marginRight" class="form-input" min="0" max="40" step="0.5" value="3">
+                            </div>
+                            <div>
+                                <span style="font-size: 0.72rem; color: var(--text-muted);">أسفل</span>
+                                <input type="number" id="marginBottom" class="form-input" min="0" max="40" step="0.5" value="3">
+                            </div>
+                            <div>
+                                <span style="font-size: 0.72rem; color: var(--text-muted);">يسار</span>
+                                <input type="number" id="marginLeft" class="form-input" min="0" max="40" step="0.5" value="3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slot Gap -->
+                    <div class="form-group" style="margin-top: 10px;">
+                        <div class="form-label">
+                            <span>المسافة الفاصلة بين التقسيمات:</span>
+                        </div>
+                        <div class="input-with-unit">
+                            <input type="number" id="slotGap" class="form-input" min="0" max="30" step="0.5" value="3">
+                            <span class="input-unit">مم</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL 4: Photo Border / Frame (برواز للصور) -->
+                <div class="panel-card">
+                    <div class="panel-title">
+                        <span>برواز وإطار الصور</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="borderToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div id="borderOptions" class="hidden">
+                        <div class="grid-2col">
+                            <div class="form-group">
+                                <label class="form-label" for="borderWidth">سُمك البرواز:</label>
+                                <div class="input-with-unit">
+                                    <input type="number" id="borderWidth" class="form-input" min="0.5" max="15" step="0.5" value="1.5">
+                                    <span class="input-unit">مم</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="borderColor">لون البرواز:</label>
+                                <input type="color" id="borderColor" class="form-input" value="#000000" style="height: 38px; padding: 2px 4px; cursor: pointer;">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 8px;">
+                            <label class="form-label" for="borderRadius">استدارة زوايا البرواز:</label>
+                            <div class="input-with-unit">
+                                <input type="number" id="borderRadius" class="form-input" min="0" max="25" step="0.5" value="0">
+                                <span class="input-unit">مم</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL 5: Selected Slot Inspector (التحكم بالتقسيم المحدد) -->
+                <div class="panel-card is-disabled" id="selectedSlotPanel">
+                    <div class="panel-title">
+                        <span>تحكم التقسيم المحدد</span>
+                        <span id="slotInfoBadge" class="panel-title-badge">لم يتم تحديد أي تقسيم</span>
+                    </div>
+
+                    <!-- Rotation Controls (تدوير داخل التقسيم) -->
+                    <div class="form-group">
+                        <div class="form-label">
+                            <span>تدوير الصورة داخل التقسيم:</span>
+                            <span id="slotRotationVal" style="font-weight: 700; color: var(--accent-blue);">0°</span>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button id="btnRotateCw" class="btn btn-secondary btn-sm" style="flex: 1;" type="button">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+                                    <polyline points="21 3 21 8 16 8"/>
+                                </svg>
+                                <span>90° يميناً</span>
+                            </button>
+                            <button id="btnRotateCcw" class="btn btn-secondary btn-sm" style="flex: 1;" type="button">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                                    <polyline points="3 3 3 8 8 8"/>
+                                </svg>
+                                <span>90° يساراً</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Zoom Control (تكبير وتصغير داخل التقسيم) -->
+                    <div class="form-group">
+                        <div class="form-label">
+                            <span>تكبير الصورة (يختفي الزائد تحت الحواف):</span>
+                            <span id="slotZoomVal" style="font-weight: 700; color: var(--accent-blue);">100%</span>
+                        </div>
+                        <input type="range" id="slotZoomSlider" class="form-range" min="0.5" max="4.0" step="0.05" value="1.0">
+                    </div>
+
+                    <!-- Position & Fit Reset -->
+                    <div class="form-group">
+                        <label class="form-label">ملاءمة ومحاذاة الصورة:</label>
+                        <div style="display: flex; gap: 6px;">
+                            <button id="btnFitCover" class="btn btn-secondary btn-sm" style="flex: 1;" type="button" title="ملء التقسيم بالكامل">ملء التقسيم</button>
+                            <button id="btnFitContain" class="btn btn-secondary btn-sm" style="flex: 1;" type="button" title="احتواء الصورة كاملة">احتواء كامل</button>
+                            <button id="btnResetPanZoom" class="btn btn-secondary btn-sm" style="flex: 1;" type="button" title="إعادة تعيين التحريك والتكبير">إعادة ضبط</button>
+                        </div>
+                    </div>
+
+                    <!-- Per-Slot Margin Override -->
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label class="form-label">تعديل مارجن خاص بهذا التقسيم فقط (مم):</label>
+                        <div class="grid-4col">
+                            <div>
+                                <span style="font-size: 0.7rem; color: var(--text-muted);">أعلى</span>
+                                <input type="number" id="slotMarginTop" class="form-input" min="-10" max="30" step="0.5" value="0">
+                            </div>
+                            <div>
+                                <span style="font-size: 0.7rem; color: var(--text-muted);">يمين</span>
+                                <input type="number" id="slotMarginRight" class="form-input" min="-10" max="30" step="0.5" value="0">
+                            </div>
+                            <div>
+                                <span style="font-size: 0.7rem; color: var(--text-muted);">أسفل</span>
+                                <input type="number" id="slotMarginBottom" class="form-input" min="-10" max="30" step="0.5" value="0">
+                            </div>
+                            <div>
+                                <span style="font-size: 0.7rem; color: var(--text-muted);">يسار</span>
+                                <input type="number" id="slotMarginLeft" class="form-input" min="-10" max="30" step="0.5" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slot Action Buttons -->
+                    <div style="display: flex; gap: 8px; margin-top: 12px;">
+                        <button id="btnChangeImage" class="btn btn-secondary btn-sm" style="flex: 1;" type="button">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" x2="12" y1="3" y2="15"/>
+                            </svg>
+                            <span>تغيير الصورة</span>
+                        </button>
+                        <button id="btnRemoveImage" class="btn btn-danger btn-sm" style="flex: 1;" type="button">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" x2="6" y1="6" y2="18"/>
+                                <line x1="6" x2="18" y1="6" y2="18"/>
+                            </svg>
+                            <span>حذف من التقسيم</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- Hidden File Inputs -->
+    <input type="file" id="fileInputSlot" accept="image/*" class="hidden">
+    <input type="file" id="fileInputMultiple" accept="image/*" multiple class="hidden">
+    <input type="file" id="fileInputProject" accept=".photoprint,application/json" class="hidden">
+
+    <!-- ==========================================
+         EXPORT MODAL
+         ========================================== -->
+    <div id="exportModal" class="modal-overlay hidden">
+        <div class="modal-content" style="position: relative;">
+            <div class="modal-header">
+                <h3 class="modal-title">خيارات حفظ وتصدير الورقة</h3>
+                <button class="btn-icon close-modal-btn" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" x2="6" y1="6" y2="18"/>
+                        <line x1="6" x2="18" y1="6" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Option 1: 300 DPI PNG -->
+                <div class="export-option-card" id="btnExport300Png">
+                    <div class="export-option-info">
+                        <span class="export-option-title">تصدير صورة PNG عالية الدقة (300 DPI)</span>
+                        <span class="export-option-desc">دقة فائقة (2480 × 3508 بكسل) مخصصة للمطابع وورق الصور الفوتوغرافية</span>
+                    </div>
+                    <span class="brand-badge">الأعلى جودة</span>
+                </div>
+
+                <!-- Option 2: 300 DPI JPEG -->
+                <div class="export-option-card" id="btnExport300Jpg">
+                    <div class="export-option-info">
+                        <span class="export-option-title">تصدير صورة JPEG جودة 95% (300 DPI)</span>
+                        <span class="export-option-desc">جودة طباعة ممتازة مع حجم ملف أصغر وأسرع في الحفظ</span>
+                    </div>
+                    <span class="brand-badge" style="color: var(--accent-emerald); background: rgba(16, 185, 129, 0.15);">متوازن</span>
+                </div>
+
+                <!-- Option 3: 150 DPI Fast -->
+                <div class="export-option-card" id="btnExport150Png">
+                    <div class="export-option-info">
+                        <span class="export-option-title">تصدير للمعاينة السريعة (150 DPI)</span>
+                        <span class="export-option-desc">ملف خفيف مناسب للمشاركة عبر واتساب أو البريد الإلكتروني</span>
+                    </div>
+                    <span class="brand-badge" style="color: var(--text-secondary); background: rgba(148, 163, 184, 0.15);">سريع</span>
+                </div>
+
+                <!-- Option 4: Direct Print -->
+                <div class="export-option-card" id="btnExportPrint">
+                    <div class="export-option-info">
+                        <span class="export-option-title">طباعة مباشرة عبر الطابعة (أو الحفظ كـ PDF)</span>
+                        <span class="export-option-desc">يفتح نافذة الطباعة المباشرة مع الحفاظ التام على أبعاد A4 الحقيقية</span>
+                    </div>
+                    <span class="brand-badge" style="color: var(--accent-indigo); background: rgba(99, 102, 241, 0.15);">طابعة</span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary close-modal-btn" type="button">إلغاء</button>
+            </div>
+
+            <!-- Loading overlay when rendering high-res canvas -->
+            <div class="export-loading-overlay">
+                <div class="spinner"></div>
+                <span style="font-size: 0.9rem; font-weight: 700; color: #ffffff;">جاري معالجة وتصدير الورقة بدقة 300 DPI...</span>
+                <span style="font-size: 0.75rem; color: var(--text-secondary);">يرجى الانتظار بضع ثوانٍ</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         CONFIRMATION MODAL
+         ========================================== -->
+    <div id="confirmModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="confirmModalTitle">تأكيد الإجراء</h3>
+                <button class="btn-icon close-modal-btn" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" x2="6" y1="6" y2="18"/>
+                        <line x1="6" x2="18" y1="6" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p id="confirmModalMsg" style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary close-modal-btn" type="button">إلغاء</button>
+                <button id="btnConfirmAction" class="btn btn-danger" type="button">تأكيد ومتابعة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Scripts -->
+    <script src="js/templates.js"></script>
+    <script src="js/slot-renderer.js"></script>
+    <script src="js/canvas-export.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

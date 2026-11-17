@@ -1,0 +1,14 @@
+# Build and distribution directories
+build/
+dist/
+__pycache__/
+*.pyc
+
+# Local binary (distributed via GitHub Releases)
+PhotoPrintStudio.exe
+
+# Editor & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
